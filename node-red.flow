@@ -10,7 +10,7 @@
         "id": "365a12cd.1d791e",
         "type": "credentials",
         "z": "c07c0ac5.ca6f98",
-        "name": "",
+        "name": "Set Token + PDL",
         "props": [
             {
                 "value": "token",
@@ -21,11 +21,11 @@
                 "type": "msg"
             }
         ],
-        "x": 350,
+        "x": 370,
         "y": 280,
         "wires": [
             [
-                "77fe3b52.553cf4"
+                "a12705d0.3c1588"
             ]
         ]
     },
@@ -39,7 +39,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 970,
+        "x": 1080,
         "y": 280,
         "wires": [
             [
@@ -66,7 +66,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 800,
+        "x": 910,
         "y": 280,
         "wires": [
             [
@@ -83,7 +83,7 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1470,
+        "x": 1580,
         "y": 280,
         "wires": [
             [
@@ -106,7 +106,7 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
-        "x": 1150,
+        "x": 1260,
         "y": 280,
         "wires": [
             [
@@ -136,7 +136,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 160,
+        "x": 140,
         "y": 170,
         "wires": [
             [
@@ -154,7 +154,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1940,
+        "x": 2050,
         "y": 280,
         "wires": [
             [
@@ -345,7 +345,7 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 1320,
+        "x": 1430,
         "y": 280,
         "wires": [
             [
@@ -396,7 +396,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "payloadType": "str",
-        "x": 160,
+        "x": 140,
         "y": 270,
         "wires": [
             [
@@ -426,7 +426,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 130,
+        "x": 110,
         "y": 320,
         "wires": [
             [
@@ -456,7 +456,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 160,
+        "x": 140,
         "y": 120,
         "wires": [
             [
@@ -486,7 +486,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 160,
+        "x": 140,
         "y": 220,
         "wires": [
             [
@@ -595,7 +595,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1730,
+        "x": 1840,
         "y": 280,
         "wires": [
             [
@@ -624,7 +624,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 130,
+        "x": 110,
         "y": 430,
         "wires": [
             [
@@ -857,7 +857,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 160,
+        "x": 140,
         "y": 370,
         "wires": [
             [
@@ -912,7 +912,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 970,
+        "x": 1080,
         "y": 130,
         "wires": [
             [
@@ -935,7 +935,7 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": false,
-        "x": 1150,
+        "x": 1260,
         "y": 130,
         "wires": [
             [
@@ -956,7 +956,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1960,
+        "x": 2070,
         "y": 130,
         "wires": []
     },
@@ -973,7 +973,7 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 1320,
+        "x": 1430,
         "y": 130,
         "wires": [
             [
@@ -994,7 +994,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2160,
+        "x": 2270,
         "y": 330,
         "wires": []
     },
@@ -1008,7 +1008,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1780,
+        "x": 1890,
         "y": 130,
         "wires": [
             [
@@ -1026,7 +1026,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1960,
+        "x": 2070,
         "y": 330,
         "wires": [
             [
@@ -1061,7 +1061,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 3,
-        "x": 640,
+        "x": 750,
         "y": 280,
         "wires": [
             [
@@ -1084,7 +1084,7 @@
             "c388a2a7.991dd",
             "14dec3a5.d1b7ec"
         ],
-        "x": 745,
+        "x": 855,
         "y": 220,
         "wires": []
     },
@@ -1118,7 +1118,7 @@
         "links": [
             "72485393.b9dd0c"
         ],
-        "x": 2085,
+        "x": 2195,
         "y": 280,
         "wires": []
     },
@@ -1165,7 +1165,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 140,
+        "x": 120,
         "y": 490,
         "wires": [
             [
@@ -1183,7 +1183,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 800,
+        "x": 910,
         "y": 350,
         "wires": [
             [
@@ -1204,7 +1204,7 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 980,
+        "x": 1090,
         "y": 350,
         "wires": [
             [
@@ -1224,7 +1224,7 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
+        "x": 1270,
         "y": 350,
         "wires": []
     },
@@ -1329,7 +1329,7 @@
         "links": [
             "74b7e29b.a39efc"
         ],
-        "x": 2125,
+        "x": 2235,
         "y": 280,
         "wires": []
     },
@@ -1360,7 +1360,7 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1470,
+        "x": 1580,
         "y": 130,
         "wires": [
             [
@@ -1388,7 +1388,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1600,
+        "x": 1710,
         "y": 280,
         "wires": [
             [
@@ -1412,7 +1412,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1760,
+        "x": 1870,
         "y": 200,
         "wires": []
     },
@@ -1436,7 +1436,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1590,
+        "x": 1700,
         "y": 130,
         "wires": [
             [
@@ -1460,7 +1460,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2040,
+        "x": 2150,
         "y": 230,
         "wires": []
     },
@@ -1483,7 +1483,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1920,
+        "x": 2030,
         "y": 230,
         "wires": [
             [
@@ -1492,25 +1492,16 @@
         ]
     },
     {
-        "id": "77fe3b52.553cf4",
-        "type": "change",
+        "id": "a12705d0.3c1588",
+        "type": "function",
         "z": "c07c0ac5.ca6f98",
-        "name": "Set URL",
-        "rules": [
-            {
-                "t": "set",
-                "p": "url",
-                "pt": "msg",
-                "to": "https://enedisgateway.tech/api",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 500,
+        "name": "Set URL + Global conf",
+        "func": "if (msg.usage_point_id == \"undefined\" || msg.usage_point_id == \"\") {\n    msg.usage_point_id = global.get('usage_point_id');\n}\n\nif (msg.token == \"undefined\"||msg.token == \"\") {\n    msg.token = global.get('token');\n}\n\nmsg.url = \"https://enedisgateway.tech/api\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 580,
         "y": 280,
         "wires": [
             [
