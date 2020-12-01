@@ -3378,7 +3378,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT value FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time(1d) fill(null) ",
+          "query": "SELECT value FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time(1d,-1h) fill(null) ",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
