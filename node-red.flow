@@ -154,8 +154,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 2050,
-        "y": 280,
+        "x": 2070,
+        "y": 300,
         "wires": [
             [
                 "f1335693.d225f8",
@@ -282,7 +282,7 @@
         "type": "function",
         "z": "c07c0ac5.ca6f98",
         "name": "Fields",
-        "func": "var unit                = msg.payload.meter_reading.reading_type.unit;\nvar measurement_kind    = msg.payload.meter_reading.reading_type.measurement_kind\nvar aggregate           = msg.payload.meter_reading.reading_type.aggregate;\nvar interval_reading    = msg.payload.meter_reading.interval_reading;\nvar reading_start       = msg.payload.meter_reading.start;\n\n// date_hc_begin = date_timestamp.setHours(start.split('H')[0],start.split('H')[1]);\n// date_hc_end = date_hc_end.setDate(date_hc_end.getDate() + 1);\n\nreading_start = new Date(reading_start);\nreading_start = reading_start.setDate(reading_start.getDate() - 1);\nstart_reading = true;\n\nvar hc = msg.hc;\n\nnew_day = undefined;\njumping_day = undefined\n\nmsg.payload = [];\n\nfor(let id in interval_reading) {\n    \n    date = interval_reading[id].date;\n    date_timestamp = new Date(date);\n    \n    type = \"HP\";\n    \n    for(let idd in hc) {\n        start = hc[idd].start;\n        end = hc[idd].end;\n        \n        start_hour = start.split(\"H\")[0];\n        end_hour = end.split(\"H\")[0];\n        \n        if (parseInt(start_hour) > parseInt(end_hour) ){\n            jumping_day = true;\n        }else{\n            jumping_day = false;\n        }\n        \n        if (jumping_day === true) {\n            \n            hc_start    = new Date(date_timestamp);\n            hc_end      = new Date(date_timestamp);\n\n            day_start   = new Date(hc_start).getDate();\n            day_current = new Date(date_timestamp).getDate();\n            hours_current = new Date(date_timestamp).getHours();\n            day_ending  = new Date(hc_end).getDate();\n            \n            if (hours_current < 12 && day_start == day_current) {\n                hc_start = new Date(hc_start);\n                hc_start = hc_start.setDate(hc_start.getDate() - 1);\n            }\n            if (hours_current >= 12) {\n                hc_end = new Date(hc_end);\n                if (day_ending == day_current) {\n                    hc_end = hc_end.setDate(hc_end.getDate() + 1);\n                }              \n            }            \n            \n        }else{\n            hc_start = new Date(date_timestamp);\n            hc_end = new Date(date_timestamp);\n        }\n        \n        hc_start = new Date(hc_start);\n        hc_start = hc_start.setHours(start.split('H')[0],start.split('H')[1]); \n        hc_end = new Date(hc_end);\n        hc_end = hc_end.setHours(end.split('H')[0],end.split('H')[1]);     \n        \n        if (hc_start <= date_timestamp && date_timestamp < hc_end) {\n            type = \"HC\";\n        }\n        \n        // begin_date = new Date(hc_start).getDate()+\" - \"+new Date(hc_start).getHours()+\":\"+new Date(hc_start).getMinutes();\n        // ended_date = new Date(hc_end).getDate()+\" - \"+new Date(hc_end).getHours()+\":\"+new Date(hc_end).getMinutes();\n        // timestamp = new Date(date_timestamp).getDate()+\" - \"+new Date(date_timestamp).getHours()+\":\"+new Date(date_timestamp).getMinutes();        new Date(date_timestamp)\n        // node.log(begin_date+\"\\t<=\\t\"+timestamp+\"\\t<\\t\"+ended_date+\"\\t=> \"+type);  \n    }\n    \n    tags = {\n        month: date.split(' ')[0].split('-')[1],\n        year: date.split(' ')[0].split('-')[0],\n        measure_type: interval_reading[id].measure_type,\n        interval_length: interval_reading[id].interval_length,\n        usage_point_id: msg.usage_point_id,\n        type: type\n    }\n    fields = {\n        value: parseInt(interval_reading[id].value),\n        subscribed_power: parseInt(msg.subscribed_power),\n        time: date_timestamp*1000000\n    }\n    \n    msg.payload.push([fields,tags]);\n    if (type == \"HC\") {\n        // node.log(\"============================================================================== \"+type);\n    }\n}\n\nmsg.measurement = \"consumption_load_curve\";\n\nreturn msg;",
+        "func": "var unit                = msg.payload.meter_reading.reading_type.unit;\nvar measurement_kind    = msg.payload.meter_reading.reading_type.measurement_kind\nvar aggregate           = msg.payload.meter_reading.reading_type.aggregate;\nvar interval_reading    = msg.payload.meter_reading.interval_reading;\nvar reading_start       = msg.payload.meter_reading.start;\n\n// date_hc_begin = date_timestamp.setHours(start.split('H')[0],start.split('H')[1]);\n// date_hc_end = date_hc_end.setDate(date_hc_end.getDate() + 1);\n\nreading_start = new Date(reading_start);\nreading_start = reading_start.setDate(reading_start.getDate() - 1);\nstart_reading = true;\n\nvar hc = msg.hc;\n\nnew_day = undefined;\njumping_day = undefined\n\nmsg.payload = [];\n\nfor(let id in interval_reading) {\n    \n    date = interval_reading[id].date;\n    date_timestamp = new Date(date);\n    \n    type = \"HP\";\n    \n    for(let idd in hc) {\n        start = hc[idd].start;\n        end = hc[idd].end;\n        \n        start_hour = start.split(\"H\")[0];\n        end_hour = end.split(\"H\")[0];\n        \n        if (parseInt(start_hour) > parseInt(end_hour) ){\n            jumping_day = true;\n        }else{\n            jumping_day = false;\n        }\n        \n        if (jumping_day === true) {\n            \n            hc_start    = new Date(date_timestamp);\n            hc_end      = new Date(date_timestamp);\n\n            day_start   = new Date(hc_start).getDate();\n            day_current = new Date(date_timestamp).getDate();\n            hours_current = new Date(date_timestamp).getHours();\n            day_ending  = new Date(hc_end).getDate();\n            \n            if (hours_current < 12 && day_start == day_current) {\n                hc_start = new Date(hc_start);\n                hc_start = hc_start.setDate(hc_start.getDate() - 1);\n            }\n            if (hours_current >= 12) {\n                hc_end = new Date(hc_end);\n                if (day_ending == day_current) {\n                    hc_end = hc_end.setDate(hc_end.getDate() + 1);\n                }              \n            }            \n            \n        }else{\n            hc_start = new Date(date_timestamp);\n            hc_end = new Date(date_timestamp);\n        }\n        \n        hc_start = new Date(hc_start);\n        hc_start = hc_start.setHours(start.split('H')[0],start.split('H')[1]); \n        hc_end = new Date(hc_end);\n        hc_end = hc_end.setHours(end.split('H')[0],end.split('H')[1]);     \n        \n        if (hc_start <= date_timestamp && date_timestamp < hc_end) {\n            type = \"HC\";\n        }\n        \n        // begin_date = new Date(hc_start).getDate()+\" - \"+new Date(hc_start).getHours()+\":\"+new Date(hc_start).getMinutes();\n        // ended_date = new Date(hc_end).getDate()+\" - \"+new Date(hc_end).getHours()+\":\"+new Date(hc_end).getMinutes();\n        // timestamp = new Date(date_timestamp).getDate()+\" - \"+new Date(date_timestamp).getHours()+\":\"+new Date(date_timestamp).getMinutes();        new Date(date_timestamp)\n        // node.log(begin_date+\"\\t<=\\t\"+timestamp+\"\\t<\\t\"+ended_date+\"\\t=> \"+type);  \n    }\n    \n    tags = {\n        month: date.split(' ')[0].split('-')[1],\n        year: date.split(' ')[0].split('-')[0],\n        measure_type: interval_reading[id].measure_type,\n        interval_length: interval_reading[id].interval_length,\n        usage_point_id: msg.usage_point_id,\n        type: type\n    }\n    fields = {\n        value: parseInt(interval_reading[id].value),\n        subscribed_power: parseInt(msg.subscribed_power),\n        year: date.split(' ')[0].split('-')[0],\n        month: date.split(' ')[0].split('-')[1],\n        time: date_timestamp*1000000\n    }\n    \n    msg.payload.push([fields,tags]);\n    if (type == \"HC\") {\n        // node.log(\"============================================================================== \"+type);\n    }\n}\n\nmsg.measurement = \"consumption_load_curve\";\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -395,7 +395,6 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payloadType": "str",
         "x": 140,
         "y": 270,
         "wires": [
@@ -596,10 +595,10 @@
         "repair": false,
         "outputs": 2,
         "x": 1840,
-        "y": 280,
+        "y": 300,
         "wires": [
             [
-                "202ec1be.3cf92e"
+                "3c3f483b.52ab98"
             ],
             [
                 "2aa9e8ff.429028",
@@ -843,7 +842,7 @@
         "props": [
             {
                 "p": "since",
-                "v": "3",
+                "v": "2",
                 "vt": "num"
             },
             {
@@ -956,7 +955,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2070,
+        "x": 2240,
         "y": 130,
         "wires": []
     },
@@ -994,8 +993,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2270,
-        "y": 330,
+        "x": 2290,
+        "y": 350,
         "wires": []
     },
     {
@@ -1008,7 +1007,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1890,
+        "x": 2050,
         "y": 130,
         "wires": [
             [
@@ -1026,8 +1025,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 2070,
-        "y": 330,
+        "x": 2090,
+        "y": 350,
         "wires": [
             [
                 "56f23154.b3524"
@@ -1118,8 +1117,8 @@
         "links": [
             "72485393.b9dd0c"
         ],
-        "x": 2195,
-        "y": 280,
+        "x": 2215,
+        "y": 300,
         "wires": []
     },
     {
@@ -1165,7 +1164,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 120,
+        "x": 140,
         "y": 490,
         "wires": [
             [
@@ -1329,8 +1328,8 @@
         "links": [
             "74b7e29b.a39efc"
         ],
-        "x": 2235,
-        "y": 280,
+        "x": 2255,
+        "y": 300,
         "wires": []
     },
     {
@@ -1382,17 +1381,25 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "pdl_empty",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 1710,
         "y": 280,
         "wires": [
             [
                 "32edfdcc.988912"
+            ],
+            [
+                "60698a0d.a314b4"
             ],
             [
                 "d3f22afa.476c48"
@@ -1413,7 +1420,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1870,
-        "y": 200,
+        "y": 180,
         "wires": []
     },
     {
@@ -1430,12 +1437,17 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "pdl_empty",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
+        "outputs": 3,
         "x": 1700,
         "y": 130,
         "wires": [
@@ -1443,7 +1455,10 @@
                 "32edfdcc.988912"
             ],
             [
-                "540d528a.74db7c"
+                "60698a0d.a314b4"
+            ],
+            [
+                "da6c8240.43a4a"
             ]
         ]
     },
@@ -1451,7 +1466,7 @@
         "id": "3c3f483b.52ab98",
         "type": "debug",
         "z": "c07c0ac5.ca6f98",
-        "name": "BAN",
+        "name": "ERROR",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1460,36 +1475,9 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2150,
-        "y": 230,
+        "x": 2060,
+        "y": 250,
         "wires": []
-    },
-    {
-        "id": "202ec1be.3cf92e",
-        "type": "change",
-        "z": "c07c0ac5.ca6f98",
-        "name": "Erreur",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "Merci de réessayer plus tard !",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 2030,
-        "y": 230,
-        "wires": [
-            [
-                "3c3f483b.52ab98"
-            ]
-        ]
     },
     {
         "id": "a12705d0.3c1588",
@@ -1507,6 +1495,50 @@
             [
                 "3e5b5c2.2704da4"
             ]
+        ]
+    },
+    {
+        "id": "60698a0d.a314b4",
+        "type": "debug",
+        "z": "c07c0ac5.ca6f98",
+        "name": "No PDL",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1880,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "da6c8240.43a4a",
+        "type": "switch",
+        "z": "c07c0ac5.ca6f98",
+        "name": "PDL ?",
+        "property": "msg.payload.customer.usage_points",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1860,
+        "y": 130,
+        "wires": [
+            [
+                "540d528a.74db7c"
+            ],
+            []
         ]
     },
     {
@@ -1528,8 +1560,8 @@
         "hostname": "192.168.1.9",
         "port": "8086",
         "protocol": "http",
-        "database": "hass",
-        "name": "HASS",
+        "database": "database",
+        "name": "name",
         "usetls": false,
         "tls": "2923591e.104216",
         "influxdbVersion": "1.x",
@@ -1540,7 +1572,7 @@
         "id": "5a120b36.df9674",
         "type": "mqtt-broker",
         "name": "MQTT",
-        "broker": "192.168.1.19",
+        "broker": "MQTTHOST,
         "port": "1883",
         "clientid": "node-red-dynamic",
         "usetls": false,
