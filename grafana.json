@@ -1901,7 +1901,7 @@
         "#d44a3a"
       ],
       "datasource": "HASS",
-      "decimals": 4,
+      "decimals": 2,
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2962,12 +2962,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [
-                  "/60*10"
-                ],
-                "type": "math"
               }
             ]
           ],
@@ -3000,12 +2994,6 @@
                   "value"
                 ],
                 "type": "field"
-              },
-              {
-                "params": [
-                  "/60*10"
-                ],
-                "type": "math"
               }
             ]
           ],
@@ -3077,7 +3065,7 @@
           "format": "watth",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "14000",
           "min": null,
           "show": true
         },
@@ -3125,8 +3113,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Consommation"
+              "id": "byType",
+              "options": "number"
             },
             "properties": [
               {
@@ -3134,40 +3122,16 @@
                 "value": "lcd-gauge"
               },
               {
-                "id": "unit",
-                "value": "watt"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Année"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 76
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Mois"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 49
+                "id": "decimals",
+                "value": 1
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 11,
-        "w": 24,
+        "h": 10,
+        "w": 11,
         "x": 0,
         "y": 22
       },
@@ -3243,6 +3207,7 @@
           ]
         },
         {
+          "alias": "Consommation {année: $tag_year , mois: $tag_month}",
           "groupBy": [
             {
               "params": [
@@ -3363,7 +3328,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 32
       },
       "hiddenSeries": false,
       "id": 17,
@@ -3428,6 +3393,12 @@
               {
                 "params": [],
                 "type": "sum"
+              },
+              {
+                "params": [
+                  " / 2"
+                ],
+                "type": "math"
               }
             ]
           ],
@@ -3490,6 +3461,107 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 13,
+        "x": 11,
+        "y": 22
+      },
+      "id": 30,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "7.1.5",
+      "targets": [
+        {
+          "alias": "Power Consumption",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\") / 2 FROM \"consumption_load_curve\" WHERE $timeFilter GROUP BY time(1d,-1h) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Power Consumption Values per day",
+      "type": "table"
     }
   ],
   "refresh": false,
@@ -3638,5 +3710,5 @@
   "timezone": "",
   "title": "Linky",
   "uid": "P9D3-2QZz",
-  "version": 88
+  "version": 89
 }
