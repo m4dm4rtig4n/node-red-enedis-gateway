@@ -1572,7 +1572,7 @@
         "id": "5a120b36.df9674",
         "type": "mqtt-broker",
         "name": "MQTT",
-        "broker": "MQTTHOST,
+        "broker": "MQTTHOST",
         "port": "1883",
         "clientid": "node-red-dynamic",
         "usetls": false,
