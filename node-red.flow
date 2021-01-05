@@ -118,7 +118,7 @@
         "id": "6e9e8629.0683a8",
         "type": "inject",
         "z": "c07c0ac5.ca6f98",
-        "name": "1 Ans",
+        "name": "This years (Y-1)",
         "props": [
             {
                 "p": "since",
@@ -136,7 +136,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 140,
+        "x": 110,
         "y": 170,
         "wires": [
             [
@@ -168,13 +168,13 @@
         "type": "function",
         "z": "c07c0ac5.ca6f98",
         "name": "Split date week per week",
-        "func": "var now = new Date();\nvar date_begin = new Date();\nvar since = msg.since;\ndate_begin = date_begin.setDate(date_begin.getDate() - since);\nvar finish = false;\n\nmsg.payload = [];\n\nif (since < 7) {\n    start_week = new Date(date_begin);\n    year  = start_week.getFullYear();    \n    month = (start_week.getMonth() + 1).toString().padStart(2, \"0\");\n    day   = start_week.getDate().toString().padStart(2, \"0\");\n    start = year + '-' + month + '-' + day;\n    \n    end_week = new Date(now); \n    end_week = end_week.setDate(end_week.getDate() - 1);        \n    end_week = new Date(end_week); \n    year  = end_week.getFullYear();    \n    month = (end_week.getMonth() + 1).toString().padStart(2, \"0\");\n    day   = end_week.getDate().toString().padStart(2, \"0\");    \n    end = year + '-' + month + '-' + day; \n\n    msg.payload.push({\n        start: start,\n        end: end\n    });    \n    \n}else{\n    while (finish === false) {\n        \n        start_week = new Date(date_begin);\n        year  = start_week.getFullYear();    \n        month = (start_week.getMonth() + 1).toString().padStart(2, \"0\");\n        day   = start_week.getDate().toString().padStart(2, \"0\");\n        start = year + '-' + month + '-' + day;\n        \n        date_begin = new Date(date_begin);\n        end_week = date_begin.setDate(date_begin.getDate() + 7);\n        end_week = new Date(end_week);\n    \n        year  = end_week.getFullYear();    \n        month = (end_week.getMonth() + 1).toString().padStart(2, \"0\");\n        day   = end_week.getDate().toString().padStart(2, \"0\");\n        end = year + '-' + month + '-' + day;  \n        \n        if (now < end_week) {\n            finish = true;\n        }else{\n            msg.payload.push({\n                start: start,\n                end: end\n                });\n        }\n    }\n}\n\nreturn msg;",
+        "func": "var now = new Date();\nvar date_begin = new Date();\nvar date_end = new Date();\nvar since = msg.since;\nvar to = msg.to ||false;\ndate_begin = date_begin.setDate(date_begin.getDate() - since);\nvar finish = false;\nvar id = 0;\n\nif (to == false) {\n    to = now;\n}else{\n    to = date_end.setDate(date_end.getDate() - to)\n}\n\nmsg.payload = [];\n\nif (since < 7) {\n    start_week = new Date(date_begin);\n    year  = start_week.getFullYear();    \n    month = (start_week.getMonth() + 1).toString().padStart(2, \"0\");\n    day   = start_week.getDate().toString().padStart(2, \"0\");\n    start = year + '-' + month + '-' + day;\n    \n    end_week = new Date(now); \n    end_week = end_week.setDate(end_week.getDate() - 1);        \n    end_week = new Date(end_week); \n    year  = end_week.getFullYear();    \n    month = (end_week.getMonth() + 1).toString().padStart(2, \"0\");\n    day   = end_week.getDate().toString().padStart(2, \"0\");    \n    end = year + '-' + month + '-' + day; \n    id = id + 1;\n    msg.payload.push({\n        start: start,\n        end: end,\n        id: id\n    });    \n    \n}else{\n    while (finish === false) {\n        \n        start_week = new Date(date_begin);\n        year  = start_week.getFullYear();    \n        month = (start_week.getMonth() + 1).toString().padStart(2, \"0\");\n        day   = start_week.getDate().toString().padStart(2, \"0\");\n        start = year + '-' + month + '-' + day;\n        \n        date_begin = new Date(date_begin);\n        end_week = date_begin.setDate(date_begin.getDate() + 7);\n        end_week = new Date(end_week);\n    \n        year  = end_week.getFullYear();    \n        month = (end_week.getMonth() + 1).toString().padStart(2, \"0\");\n        day   = end_week.getDate().toString().padStart(2, \"0\");\n        end = year + '-' + month + '-' + day;  \n        \n        id = id + 1;        \n        \n        if (to < end_week) {\n            finish = true;\n        }else{\n            msg.payload.push({\n                start: start,\n                end: end,\n                id: id\n                });\n        }\n    }\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 830,
-        "y": 480,
+        "x": 850,
+        "y": 570,
         "wires": [
             [
                 "b7d756a4.f1d818"
@@ -194,11 +194,10 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 1560,
-        "y": 480,
+        "x": 1570,
+        "y": 570,
         "wires": [
             [
-                "990f96c2.3bf648",
                 "c3d874c9.6296a8"
             ]
         ]
@@ -208,16 +207,16 @@
         "type": "function",
         "z": "c07c0ac5.ca6f98",
         "name": "Set Header",
-        "func": "msg.headers = {};\nmsg.headers['Content-Type'] = 'application/x-www-form-urlencoded';\nmsg.headers['Authorization'] = msg.token;\nmsg.payload = {\n    'type': \"consumption_load_curve\",\n    'usage_point_id': msg.usage_point_id,\n    'start': msg.payload.start,\n    'end': msg.payload.end\n}\n// msg.payload = {\n//     'type': \"daily_consumption\",\n//     'usage_point_id': msg.usage_point_id,\n//     'start': msg.payload.start,\n//     'end': msg.payload.end\n// }\n\nreturn msg;",
+        "func": "msg.headers = {};\nmsg.headers['Content-Type'] = 'application/x-www-form-urlencoded';\nmsg.headers['Authorization'] = msg.token;\nmsg.id = msg.payload.id;\nmsg.payload = {\n    'type': \"consumption_load_curve\",\n    'usage_point_id': msg.usage_point_id,\n    'start': msg.payload.start,\n    'end': msg.payload.end\n}\nmsg.query = {\n    'type': \"consumption_load_curve\",\n    'usage_point_id': msg.usage_point_id,\n    'start': msg.payload.start,\n    'end': msg.payload.end\n}\n// msg.payload = {\n//     'type': \"daily_consumption\",\n//     'usage_point_id': msg.usage_point_id,\n//     'start': msg.payload.start,\n//     'end': msg.payload.end\n// }\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1180,
-        "y": 480,
+        "x": 1200,
+        "y": 570,
         "wires": [
             [
-                "16f546ae.57af49"
+                "22f0c4e8.2506fc"
             ]
         ]
     },
@@ -229,34 +228,11 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1710,
-        "y": 480,
+        "x": 1880,
+        "y": 520,
         "wires": [
             [
                 "56d40a3c.20f3d4"
-            ]
-        ]
-    },
-    {
-        "id": "16f546ae.57af49",
-        "type": "delay",
-        "z": "c07c0ac5.ca6f98",
-        "name": "",
-        "pauseType": "rate",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "3",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "x": 1380,
-        "y": 480,
-        "wires": [
-            [
-                "20a8cad0.e117b6"
             ]
         ]
     },
@@ -273,8 +249,8 @@
         "retentionPolicyV18Flux": "",
         "org": "",
         "bucket": "",
-        "x": 2300,
-        "y": 480,
+        "x": 2580,
+        "y": 520,
         "wires": []
     },
     {
@@ -282,13 +258,13 @@
         "type": "function",
         "z": "c07c0ac5.ca6f98",
         "name": "Fields",
-        "func": "var unit                = msg.payload.meter_reading.reading_type.unit;\nvar measurement_kind    = msg.payload.meter_reading.reading_type.measurement_kind\nvar aggregate           = msg.payload.meter_reading.reading_type.aggregate;\nvar interval_reading    = msg.payload.meter_reading.interval_reading;\nvar reading_start       = msg.payload.meter_reading.start;\n\n// date_hc_begin = date_timestamp.setHours(start.split('H')[0],start.split('H')[1]);\n// date_hc_end = date_hc_end.setDate(date_hc_end.getDate() + 1);\n\nreading_start = new Date(reading_start);\nreading_start = reading_start.setDate(reading_start.getDate() - 1);\nstart_reading = true;\n\nvar hc = msg.hc;\n\nnew_day = undefined;\njumping_day = undefined\n\nmsg.payload = [];\n\nfor(let id in interval_reading) {\n    \n    date = interval_reading[id].date;\n    date_timestamp = new Date(date);\n    \n    type = \"HP\";\n    \n    for(let idd in hc) {\n        start = hc[idd].start;\n        end = hc[idd].end;\n        \n        start_hour = start.split(\"H\")[0];\n        end_hour = end.split(\"H\")[0];\n        \n        if (parseInt(start_hour) > parseInt(end_hour) ){\n            jumping_day = true;\n        }else{\n            jumping_day = false;\n        }\n        \n        if (jumping_day === true) {\n            \n            hc_start    = new Date(date_timestamp);\n            hc_end      = new Date(date_timestamp);\n\n            day_start   = new Date(hc_start).getDate();\n            day_current = new Date(date_timestamp).getDate();\n            hours_current = new Date(date_timestamp).getHours();\n            day_ending  = new Date(hc_end).getDate();\n            \n            if (hours_current < 12 && day_start == day_current) {\n                hc_start = new Date(hc_start);\n                hc_start = hc_start.setDate(hc_start.getDate() - 1);\n            }\n            if (hours_current >= 12) {\n                hc_end = new Date(hc_end);\n                if (day_ending == day_current) {\n                    hc_end = hc_end.setDate(hc_end.getDate() + 1);\n                }              \n            }            \n            \n        }else{\n            hc_start = new Date(date_timestamp);\n            hc_end = new Date(date_timestamp);\n        }\n        \n        hc_start = new Date(hc_start);\n        hc_start = hc_start.setHours(start.split('H')[0],start.split('H')[1]); \n        hc_end = new Date(hc_end);\n        hc_end = hc_end.setHours(end.split('H')[0],end.split('H')[1]);     \n        \n        if (hc_start <= date_timestamp && date_timestamp < hc_end) {\n            type = \"HC\";\n        }\n        \n        // begin_date = new Date(hc_start).getDate()+\" - \"+new Date(hc_start).getHours()+\":\"+new Date(hc_start).getMinutes();\n        // ended_date = new Date(hc_end).getDate()+\" - \"+new Date(hc_end).getHours()+\":\"+new Date(hc_end).getMinutes();\n        // timestamp = new Date(date_timestamp).getDate()+\" - \"+new Date(date_timestamp).getHours()+\":\"+new Date(date_timestamp).getMinutes();        new Date(date_timestamp)\n        // node.log(begin_date+\"\\t<=\\t\"+timestamp+\"\\t<\\t\"+ended_date+\"\\t=> \"+type);  \n    }\n    \n    tags = {\n        month: date.split(' ')[0].split('-')[1],\n        year: date.split(' ')[0].split('-')[0],\n        measure_type: interval_reading[id].measure_type,\n        interval_length: interval_reading[id].interval_length,\n        usage_point_id: msg.usage_point_id,\n        type: type\n    }\n    fields = {\n        value: parseInt(interval_reading[id].value),\n        subscribed_power: parseInt(msg.subscribed_power),\n        year: date.split(' ')[0].split('-')[0],\n        month: date.split(' ')[0].split('-')[1],\n        time: date_timestamp*1000000\n    }\n    \n    msg.payload.push([fields,tags]);\n    if (type == \"HC\") {\n        // node.log(\"============================================================================== \"+type);\n    }\n}\n\nmsg.measurement = \"consumption_load_curve\";\n\nreturn msg;",
+        "func": "var unit                = msg.payload.meter_reading.reading_type.unit;\nvar measurement_kind    = msg.payload.meter_reading.reading_type.measurement_kind\nvar aggregate           = msg.payload.meter_reading.reading_type.aggregate;\nvar interval_reading    = msg.payload.meter_reading.interval_reading;\nvar reading_start       = msg.payload.meter_reading.start;\n\n// date_hc_begin = date_timestamp.setHours(start.split('H')[0],start.split('H')[1]);\n// date_hc_end = date_hc_end.setDate(date_hc_end.getDate() + 1);\n\nreading_start = new Date(reading_start);\nreading_start = reading_start.setDate(reading_start.getDate() - 1);\nstart_reading = true;\n\nvar hc = msg.hc;\n\nnew_day = undefined;\njumping_day = undefined\n\nmsg.payload = [];\n\nfor(let id in interval_reading) {\n    \n    date = interval_reading[id].date;\n    date_timestamp = new Date(date);\n    \n    type = \"HP\";\n    \n    for(let idd in hc) {\n        start = hc[idd].start;\n        end = hc[idd].end;\n        \n        start_hour = start.split(\"H\")[0];\n        end_hour = end.split(\"H\")[0];\n        \n        if (parseInt(start_hour) > parseInt(end_hour) ){\n            jumping_day = true;\n        }else{\n            jumping_day = false;\n        }\n        \n        if (jumping_day === true) {\n            \n            hc_start    = new Date(date_timestamp);\n            hc_end      = new Date(date_timestamp);\n\n            day_start   = new Date(hc_start).getDate();\n            day_current = new Date(date_timestamp).getDate();\n            hours_current = new Date(date_timestamp).getHours();\n            day_ending  = new Date(hc_end).getDate();\n            \n            if (hours_current < 12 && day_start == day_current) {\n                hc_start = new Date(hc_start);\n                hc_start = hc_start.setDate(hc_start.getDate() - 1);\n            }\n            if (hours_current >= 12) {\n                hc_end = new Date(hc_end);\n                if (day_ending == day_current) {\n                    hc_end = hc_end.setDate(hc_end.getDate() + 1);\n                }              \n            }            \n            \n        }else{\n            hc_start = new Date(date_timestamp);\n            hc_end = new Date(date_timestamp);\n        }\n        \n        hc_start = new Date(hc_start);\n        hc_start = hc_start.setHours(start.split('H')[0],start.split('H')[1]); \n        hc_end = new Date(hc_end);\n        hc_end = hc_end.setHours(end.split('H')[0],end.split('H')[1]);     \n        \n        if (hc_start <= date_timestamp && date_timestamp < hc_end) {\n            type = \"HC\";\n        }\n        \n        // begin_date = new Date(hc_start).getDate()+\" - \"+new Date(hc_start).getHours()+\":\"+new Date(hc_start).getMinutes();\n        // ended_date = new Date(hc_end).getDate()+\" - \"+new Date(hc_end).getHours()+\":\"+new Date(hc_end).getMinutes();\n        // timestamp = new Date(date_timestamp).getDate()+\" - \"+new Date(date_timestamp).getHours()+\":\"+new Date(date_timestamp).getMinutes();        new Date(date_timestamp)\n        // node.log(begin_date+\"\\t<=\\t\"+timestamp+\"\\t<\\t\"+ended_date+\"\\t=> \"+type);  \n    }\n    \n    tags = {\n        month: date.split(' ')[0].split('-')[1],\n        year: date.split(' ')[0].split('-')[0],\n        measure_type: interval_reading[id].measure_type,\n        // interval_length: interval_reading[id].interval_length,\n        usage_point_id: msg.usage_point_id,\n        type: type\n    }\n    \n    mesure_interval = interval_reading[id].interval_length.match(/\\d+/)[0];\n    // value = parseInt(interval_reading[id].value/60*mesure_interval)\n    value = parseInt(interval_reading[id].value*(mesure_interval/60))\n    // value = parseInt(interval_reading[id].value)\n    \n    node.log(value);\n    \n    fields = {\n        value: value,\n        subscribed_power: parseInt(msg.subscribed_power),\n        year: date.split(' ')[0].split('-')[0],\n        month: date.split(' ')[0].split('-')[1],\n        time: date_timestamp*1000000\n        // time: date_timestamp\n    }\n    \n    msg.payload.push([fields,tags]);\n    if (type == \"HC\") {\n        // node.log(\"============================================================================== \"+type);\n    }\n}\n\nmsg.measurement = \"consumption_load_curve\";\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1840,
-        "y": 480,
+        "x": 2010,
+        "y": 520,
         "wires": [
             [
                 "66128905.90dcb8"
@@ -306,11 +282,11 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "",
-        "x": 1970,
-        "y": 480,
+        "x": 2140,
+        "y": 520,
         "wires": [
             [
-                "1f328fcd.9c89b"
+                "856155e9.74e388"
             ]
         ]
     },
@@ -324,8 +300,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 610,
-        "y": 480,
+        "x": 630,
+        "y": 570,
         "wires": [
             [
                 "a5ab6458.7ced58"
@@ -364,42 +340,12 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "",
-        "x": 1020,
-        "y": 480,
+        "x": 1040,
+        "y": 570,
         "wires": [
             [
                 "d94da224.6067f",
                 "f9ae91a7.6671f"
-            ]
-        ]
-    },
-    {
-        "id": "43436ec7.c1667",
-        "type": "inject",
-        "z": "c07c0ac5.ca6f98",
-        "name": "1 Mois",
-        "props": [
-            {
-                "p": "since",
-                "v": "31",
-                "vt": "num"
-            },
-            {
-                "p": "ask",
-                "v": "since",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 140,
-        "y": 270,
-        "wires": [
-            [
-                "365a12cd.1d791e"
             ]
         ]
     },
@@ -426,7 +372,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 110,
-        "y": 320,
+        "y": 370,
         "wires": [
             [
                 "365a12cd.1d791e"
@@ -437,11 +383,16 @@
         "id": "2989405.323a5c",
         "type": "inject",
         "z": "c07c0ac5.ca6f98",
-        "name": "2 Ans",
+        "name": "Last years (Y-2)",
         "props": [
             {
                 "p": "since",
                 "v": "730",
+                "vt": "num"
+            },
+            {
+                "p": "to",
+                "v": "365",
                 "vt": "num"
             },
             {
@@ -455,7 +406,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 140,
+        "x": 110,
         "y": 120,
         "wires": [
             [
@@ -504,8 +455,8 @@
         "precision": "",
         "retentionPolicy": "",
         "org": "",
-        "x": 1350,
-        "y": 540,
+        "x": 1370,
+        "y": 630,
         "wires": [
             []
         ]
@@ -520,8 +471,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 1190,
-        "y": 540,
+        "x": 1210,
+        "y": 630,
         "wires": [
             [
                 "10c9828d.dd384d"
@@ -537,6 +488,11 @@
         "propertyType": "msg",
         "rules": [
             {
+                "t": "eq",
+                "v": "200",
+                "vt": "str"
+            },
+            {
                 "t": "neq",
                 "v": "200",
                 "vt": "num"
@@ -544,35 +500,15 @@
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 1,
-        "x": 1710,
-        "y": 520,
+        "outputs": 2,
+        "x": 1730,
+        "y": 570,
         "wires": [
             [
-                "86c7b003.14b13"
-            ]
-        ]
-    },
-    {
-        "id": "1f328fcd.9c89b",
-        "type": "delay",
-        "z": "c07c0ac5.ca6f98",
-        "name": "",
-        "pauseType": "rate",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "100",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "x": 2130,
-        "y": 480,
-        "wires": [
+                "990f96c2.3bf648"
+            ],
             [
-                "b2bd86bb.833d18"
+                "3f9b2aea.1920b6"
             ]
         ]
     },
@@ -624,7 +560,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 110,
-        "y": 430,
+        "y": 480,
         "wires": [
             [
                 "365a12cd.1d791e"
@@ -641,8 +577,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 770,
+        "x": 350,
+        "y": 920,
         "wires": [
             [
                 "c4cd65ea.89e318"
@@ -660,8 +596,8 @@
         "precision": "",
         "retentionPolicy": "",
         "org": "",
-        "x": 640,
-        "y": 830,
+        "x": 590,
+        "y": 980,
         "wires": [
             [
                 "2a982e5b.66e142"
@@ -677,8 +613,8 @@
         "qos": "0",
         "retain": "true",
         "broker": "5a120b36.df9674",
-        "x": 990,
-        "y": 890,
+        "x": 940,
+        "y": 1040,
         "wires": []
     },
     {
@@ -691,8 +627,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 850,
+        "x": 350,
+        "y": 1000,
         "wires": [
             [
                 "c4cd65ea.89e318"
@@ -709,8 +645,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 930,
+        "x": 350,
+        "y": 1080,
         "wires": [
             [
                 "296d1659.048eea"
@@ -731,8 +667,8 @@
         "roundOutputField": true,
         "outputFieldDecimals": 2,
         "name": "",
-        "x": 810,
-        "y": 830,
+        "x": 760,
+        "y": 980,
         "wires": [
             [
                 "90156a2.84ae798"
@@ -750,8 +686,8 @@
         "precision": "",
         "retentionPolicy": "",
         "org": "",
-        "x": 640,
-        "y": 950,
+        "x": 590,
+        "y": 1100,
         "wires": [
             [
                 "3d942600.833bda"
@@ -772,8 +708,8 @@
         "roundOutputField": true,
         "outputFieldDecimals": 2,
         "name": "",
-        "x": 810,
-        "y": 950,
+        "x": 760,
+        "y": 1100,
         "wires": [
             [
                 "90156a2.84ae798"
@@ -790,8 +726,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 890,
+        "x": 350,
+        "y": 1040,
         "wires": [
             [
                 "c4cd65ea.89e318"
@@ -808,8 +744,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 810,
+        "x": 350,
+        "y": 960,
         "wires": [
             [
                 "c4cd65ea.89e318"
@@ -826,8 +762,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 400,
-        "y": 970,
+        "x": 350,
+        "y": 1120,
         "wires": [
             [
                 "296d1659.048eea"
@@ -857,7 +793,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 140,
-        "y": 370,
+        "y": 420,
         "wires": [
             [
                 "365a12cd.1d791e"
@@ -865,30 +801,13 @@
         ]
     },
     {
-        "id": "86c7b003.14b13",
-        "type": "debug",
-        "z": "c07c0ac5.ca6f98",
-        "name": "Error",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1830,
-        "y": 520,
-        "wires": []
-    },
-    {
         "id": "8e88c7ea.c9f718",
         "type": "comment",
         "z": "c07c0ac5.ca6f98",
         "name": "------------------------------------------------------------- Export Data To MQTT -------------------------------------------------------------",
         "info": "",
-        "x": 610,
-        "y": 690,
+        "x": 580,
+        "y": 840,
         "wires": []
     },
     {
@@ -897,8 +816,8 @@
         "z": "c07c0ac5.ca6f98",
         "name": "------------------------------------------------------------- Get Daily consumption -------------------------------------------------------------",
         "info": "",
-        "x": 580,
-        "y": 70,
+        "x": 640,
+        "y": 50,
         "wires": []
     },
     {
@@ -1096,8 +1015,8 @@
             "7685451e.f7315c",
             "44a1f283.9eceec"
         ],
-        "x": 175,
-        "y": 870,
+        "x": 125,
+        "y": 1020,
         "wires": [
             [
                 "6bd1fe2d.d40bd",
@@ -1129,8 +1048,8 @@
         "links": [
             "f1335693.d225f8"
         ],
-        "x": 495,
-        "y": 480,
+        "x": 515,
+        "y": 570,
         "wires": [
             [
                 "9550b196.e3cbf"
@@ -1165,7 +1084,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 140,
-        "y": 490,
+        "y": 540,
         "wires": [
             [
                 "365a12cd.1d791e"
@@ -1236,8 +1155,8 @@
         "qos": "0",
         "retain": "true",
         "broker": "5a120b36.df9674",
-        "x": 530,
-        "y": 1050,
+        "x": 480,
+        "y": 1200,
         "wires": []
     },
     {
@@ -1250,8 +1169,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 340,
-        "y": 1050,
+        "x": 290,
+        "y": 1200,
         "wires": [
             [
                 "6ca67898.376e18"
@@ -1267,8 +1186,8 @@
         "qos": "0",
         "retain": "true",
         "broker": "5a120b36.df9674",
-        "x": 540,
-        "y": 1110,
+        "x": 490,
+        "y": 1260,
         "wires": []
     },
     {
@@ -1281,8 +1200,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 340,
-        "y": 1110,
+        "x": 290,
+        "y": 1260,
         "wires": [
             [
                 "8aeacca4.1da78"
@@ -1298,8 +1217,8 @@
         "qos": "0",
         "retain": "true",
         "broker": "5a120b36.df9674",
-        "x": 540,
-        "y": 1170,
+        "x": 490,
+        "y": 1320,
         "wires": []
     },
     {
@@ -1312,8 +1231,8 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 340,
-        "y": 1170,
+        "x": 290,
+        "y": 1320,
         "wires": [
             [
                 "90422659.0c1f98"
@@ -1341,8 +1260,8 @@
             "44a1f283.9eceec",
             "2de516e0.7a8dea"
         ],
-        "x": 175,
-        "y": 1110,
+        "x": 125,
+        "y": 1260,
         "wires": [
             [
                 "b79890ad.dbce1",
@@ -1484,7 +1403,7 @@
         "type": "function",
         "z": "c07c0ac5.ca6f98",
         "name": "Set URL + Global conf",
-        "func": "if (msg.usage_point_id == \"undefined\" || msg.usage_point_id == \"\") {\n    msg.usage_point_id = global.get('usage_point_id');\n}\n\nif (msg.token == \"undefined\"||msg.token == \"\") {\n    msg.token = global.get('token');\n}\n\nmsg.url = \"https://enedisgateway.tech/api\";\n\nreturn msg;",
+        "func": "if (msg.usage_point_id == \"undefined\" || msg.usage_point_id == \"\") {\n    msg.usage_point_id = global.get('usage_point_id');\n}\n\nif (msg.token == \"undefined\"||msg.token == \"\") {\n    msg.token = global.get('token');\n}\n\nmsg.url = \"https://enedisgateway.tech/api\";\n\nflow.set('max_retry',3);\nflow.set('wait_retry',5000);\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1542,6 +1461,454 @@
         ]
     },
     {
+        "id": "a88e1086.efbe2",
+        "type": "inject",
+        "z": "c07c0ac5.ca6f98",
+        "name": "2 Semaines",
+        "props": [
+            {
+                "p": "since",
+                "v": "16",
+                "vt": "num"
+            },
+            {
+                "p": "ask",
+                "v": "since",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 04 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 320,
+        "wires": [
+            [
+                "365a12cd.1d791e"
+            ]
+        ]
+    },
+    {
+        "id": "789bf757.066a78",
+        "type": "function",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Get Retry Count",
+        "func": "var retry_count = flow.get(\"retry.\"+msg.id) || 1;\nvar max_retry = flow.get(\"max_retry\");\nvar wait_retry = flow.get('wait_retry');\n\nif (retry_count <= max_retry) {\n    // Retry\n    flow.set(\"retry.\"+msg.id,retry_count+1);\n    msg.delay = wait_retry;\n    return msg;     \n}else{\n    flow.set(\"retry.\"+msg.id,1);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 2200,
+        "y": 660,
+        "wires": [
+            [
+                "30391d09.14e5d2",
+                "2be60e6e.d3d952"
+            ]
+        ]
+    },
+    {
+        "id": "a4bd5009.501de",
+        "type": "debug",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Next !",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2630,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "6ec6ae57.00667",
+        "type": "link out",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "links": [
+            "b644a6d8.07ea18"
+        ],
+        "x": 2625,
+        "y": 610,
+        "wires": []
+    },
+    {
+        "id": "30391d09.14e5d2",
+        "type": "change",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Reset Payload to Query",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "query",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2460,
+        "y": 660,
+        "wires": [
+            [
+                "6ec6ae57.00667",
+                "dc374e18.2016e"
+            ]
+        ]
+    },
+    {
+        "id": "b644a6d8.07ea18",
+        "type": "link in",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "links": [
+            "6ec6ae57.00667",
+            "b29fd9bc.778118",
+            "c85b5d7e.50a7e"
+        ],
+        "x": 1255,
+        "y": 520,
+        "wires": [
+            [
+                "22f0c4e8.2506fc"
+            ]
+        ]
+    },
+    {
+        "id": "3f9b2aea.1920b6",
+        "type": "switch",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Check Deadline msg",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "{\"error\":\"result_400\",\"enedis_return\":{\"error\":\"ADAM-ERR0125\",\"error_description\":\"The start date must be greater than the history deadline.\",\"error_uri\":\"https://bluecoder.enedis.fr/api-doc/consulter-souscrire\"}}",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "{\"error\":\"result_400\",\"enedis_return\":{\"error\":\"ADAM-ERR0125\",\"error_description\":\"The start date must be greater than the history deadline.\",\"error_uri\":\"https://bluecoder.enedis.fr/api-doc/consulter-souscrire\"}}",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1930,
+        "y": 620,
+        "wires": [
+            [
+                "2be60e6e.d3d952"
+            ],
+            [
+                "789bf757.066a78"
+            ]
+        ]
+    },
+    {
+        "id": "1f328fcd.9c89b",
+        "type": "delay",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "90",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2230,
+        "y": 460,
+        "wires": [
+            [
+                "71800de5.1d0c24",
+                "952d34f4.aca7a8"
+            ]
+        ]
+    },
+    {
+        "id": "2be60e6e.d3d952",
+        "type": "change",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Queue Next",
+        "rules": [
+            {
+                "t": "set",
+                "p": "trigger",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2200,
+        "y": 610,
+        "wires": [
+            [
+                "6ec6ae57.00667"
+            ]
+        ]
+    },
+    {
+        "id": "71800de5.1d0c24",
+        "type": "change",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Queue Next",
+        "rules": [
+            {
+                "t": "set",
+                "p": "trigger",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2430,
+        "y": 460,
+        "wires": [
+            [
+                "856155e9.74e388"
+            ]
+        ]
+    },
+    {
+        "id": "952d34f4.aca7a8",
+        "type": "switch",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Queue Ended ?",
+        "property": "_queueCount",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 2440,
+        "y": 420,
+        "wires": [
+            [
+                "a4bd5009.501de",
+                "1ae2e209.51315e"
+            ]
+        ]
+    },
+    {
+        "id": "dc374e18.2016e",
+        "type": "debug",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Retry",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2670,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "856155e9.74e388",
+        "type": "simple-queue",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "firstMessageBypass": true,
+        "bypassInterval": "5000",
+        "x": 2320,
+        "y": 520,
+        "wires": [
+            [
+                "b2bd86bb.833d18",
+                "1f328fcd.9c89b"
+            ]
+        ]
+    },
+    {
+        "id": "22f0c4e8.2506fc",
+        "type": "simple-queue",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "firstMessageBypass": true,
+        "bypassInterval": "0",
+        "x": 1390,
+        "y": 570,
+        "wires": [
+            [
+                "20a8cad0.e117b6"
+            ]
+        ]
+    },
+    {
+        "id": "1ae2e209.51315e",
+        "type": "change",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Queue Next",
+        "rules": [
+            {
+                "t": "set",
+                "p": "trigger",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2650,
+        "y": 420,
+        "wires": [
+            [
+                "c85b5d7e.50a7e"
+            ]
+        ]
+    },
+    {
+        "id": "c85b5d7e.50a7e",
+        "type": "link out",
+        "z": "c07c0ac5.ca6f98",
+        "name": "",
+        "links": [
+            "b644a6d8.07ea18"
+        ],
+        "x": 2765,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "db2588d.0cb8878",
+        "type": "inject",
+        "z": "c07c0ac5.ca6f98",
+        "name": "3 to 2 years (Y-3)",
+        "props": [
+            {
+                "p": "since",
+                "v": "1095",
+                "vt": "num"
+            },
+            {
+                "p": "to",
+                "v": "730",
+                "vt": "num"
+            },
+            {
+                "p": "ask",
+                "v": "since",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 70,
+        "wires": [
+            [
+                "365a12cd.1d791e"
+            ]
+        ]
+    },
+    {
+        "id": "43436ec7.c1667",
+        "type": "inject",
+        "z": "c07c0ac5.ca6f98",
+        "name": "1 Mois",
+        "props": [
+            {
+                "p": "since",
+                "v": "31",
+                "vt": "num"
+            },
+            {
+                "p": "ask",
+                "v": "since",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 140,
+        "y": 270,
+        "wires": [
+            [
+                "365a12cd.1d791e"
+            ]
+        ]
+    },
+    {
+        "id": "a89b9cb9.6ae9",
+        "type": "inject",
+        "z": "c07c0ac5.ca6f98",
+        "name": "CUSTOM",
+        "props": [
+            {
+                "p": "since",
+                "v": "800",
+                "vt": "num"
+            },
+            {
+                "p": "to",
+                "v": "700",
+                "vt": "num"
+            },
+            {
+                "p": "ask",
+                "v": "since",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "365a12cd.1d791e"
+            ]
+        ]
+    },
+    {
         "id": "2923591e.104216",
         "type": "tls-config",
         "name": "",
@@ -1557,11 +1924,11 @@
     {
         "id": "57d9cd06.0e4dc4",
         "type": "influxdb",
-        "hostname": "192.168.1.9",
+        "hostname": "IP.VERS.TON.INFLUXDB",
         "port": "8086",
         "protocol": "http",
-        "database": "database",
-        "name": "name",
+        "database": "NOM_DE_TA_BDD",
+        "name": "HASS",
         "usetls": false,
         "tls": "2923591e.104216",
         "influxdbVersion": "1.x",
@@ -1572,7 +1939,7 @@
         "id": "5a120b36.df9674",
         "type": "mqtt-broker",
         "name": "MQTT",
-        "broker": "MQTTHOST",
+        "broker": "IP.VERS.TON.MQTT,
         "port": "1883",
         "clientid": "node-red-dynamic",
         "usetls": false,

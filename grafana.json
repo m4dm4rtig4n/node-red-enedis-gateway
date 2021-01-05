@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 9,
-  "iteration": 1604667110982,
+  "id": 38,
+  "iteration": 1609839641363,
   "links": [],
   "panels": [
     {
@@ -101,7 +101,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\") /60*10 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -144,82 +144,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "alias": "PT30M",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") /60*30 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "PT60M",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -331,7 +255,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -374,80 +298,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -557,7 +407,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_STD* 20 / 100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_STD* 20 / 100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -594,80 +444,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_STD* 20 / 100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_STD* 20 / 100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -845,7 +621,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.1.5",
+      "pluginVersion": "7.3.3",
       "targets": [
         {
           "groupBy": [
@@ -865,7 +641,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "autogen",
-          "query": "SELECT sum(\"value\") /60*10/$surface_maison /1000 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT10M') AND time <= now() and time >= now() - 365d GROUP BY time($__interval) fill(none)",
+          "query": "SELECT sum(\"value\") /$surface_maison /1000 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND time <= now() and time >= now() - 365d GROUP BY time($__interval) fill(none)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -902,80 +678,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") /60*30/$surface_maison /1000 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT30M') AND time <= now() and time >= now() - 365d GROUP BY time($__interval) fill(none)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")/$surface_maison /1000  FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT60M') AND time <= now() and time >= now() - 365d GROUP BY time($__interval) fill(none)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "timeFrom": null,
@@ -1186,7 +888,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  / 60*10 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1229,80 +931,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  / 60*30 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")   FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -1412,7 +1040,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1455,80 +1083,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -1640,7 +1194,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_HP*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_HP*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1701,157 +1255,9 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_HP*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_HP*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_HC*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_HC*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_HC*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_HC*20/100 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "F",
           "resultFormat": "time_series",
           "select": [
             [
@@ -1977,7 +1383,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "autogen",
-          "query": "SELECT sum(\"value\") /60*10 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(none)",
+          "query": "SELECT sum(\"value\") FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ ) AND $timeFilter GROUP BY time($__interval) fill(none)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -2014,80 +1420,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") /60*30 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(none)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(none)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -2198,7 +1530,7 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*10*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")   /1000*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -2225,7 +1557,6 @@
           ]
         },
         {
-          "alias": "HC",
           "groupBy": [
             {
               "params": [
@@ -2242,157 +1573,9 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*10*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*30*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*30*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")   /1000*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC' AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "F",
           "resultFormat": "time_series",
           "select": [
             [
@@ -2519,7 +1702,7 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*10*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT10M') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  /1000*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -2556,80 +1739,6 @@
               "value": "PT10M"
             }
           ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000/60*30*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT30M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\")  /1000*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT60M') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": true,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": "576000,1008000",
@@ -2749,7 +1858,7 @@
           "measurement": "conso_elec",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*10*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")   /1000*$price_HP FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -2793,7 +1902,7 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")   /1000/60*10*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")   /1000*$price_HC FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -2831,7 +1940,7 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\")  / 1000/60*10*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT sum(\"value\")  / 1000*$price_STD FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "C",
           "resultFormat": "time_series",
@@ -2914,12 +2023,15 @@
         "total": true,
         "values": true
       },
-      "lines": false,
+      "lines": true,
       "linewidth": 1,
       "links": [],
-      "nullPointMode": "null as zero",
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.5",
+      "pluginVersion": "7.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2951,8 +2063,8 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "autogen",
-          "query": "SELECT \"value\" /60*10 FROM \"autogen\".\"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND $timeFilter",
-          "rawQuery": false,
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HP') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -2962,6 +2074,12 @@
                   "value"
                 ],
                 "type": "field"
+              },
+              {
+                "params": [
+                  "/60*10"
+                ],
+                "type": "math"
               }
             ]
           ],
@@ -2985,6 +2103,8 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"type\" = 'HC') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "C",
           "resultFormat": "time_series",
           "select": [
@@ -2994,6 +2114,12 @@
                   "value"
                 ],
                 "type": "field"
+              },
+              {
+                "params": [
+                  "/60*10"
+                ],
+                "type": "math"
               }
             ]
           ],
@@ -3065,7 +2191,7 @@
           "format": "watth",
           "label": null,
           "logBase": 1,
-          "max": "14000",
+          "max": null,
           "min": null,
           "show": true
         },
@@ -3088,9 +2214,286 @@
       "datasource": "HASS",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 9,
+        "x": 0,
+        "y": 22
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND \"year\" = '2021' GROUP BY \"month\", \"year\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total 2021",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 9,
+        "y": 22
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND \"year\" = '2020' GROUP BY \"month\", \"year\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total 2020",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 7,
+        "x": 17,
+        "y": 22
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.3",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND \"year\" = '2019' GROUP BY \"month\", \"year\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total 2019",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
           "custom": {
             "align": "center",
-            "displayMode": "json-view"
+            "displayMode": "json-view",
+            "filterable": false
           },
           "decimals": 2,
           "links": [],
@@ -3113,8 +2516,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byType",
-              "options": "number"
+              "id": "byName",
+              "options": "Consommation"
             },
             "properties": [
               {
@@ -3122,20 +2525,44 @@
                 "value": "lcd-gauge"
               },
               {
-                "id": "decimals",
-                "value": 1
+                "id": "unit",
+                "value": "watt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Année"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mois"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 10,
-        "w": 11,
+        "h": 14,
+        "w": 9,
         "x": 0,
-        "y": 22
+        "y": 24
       },
-      "id": 23,
+      "id": 36,
       "links": [],
       "options": {
         "frameIndex": 0,
@@ -3147,7 +2574,7 @@
           }
         ]
       },
-      "pluginVersion": "7.1.5",
+      "pluginVersion": "7.3.3",
       "targets": [
         {
           "alias": "$tag_year",
@@ -3168,7 +2595,355 @@
           "measurement": "consumption_load_curve",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\") /60*10 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT10M') GROUP BY \"month\", \"year\"",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND \"year\" = '2021' GROUP BY \"month\", \"year\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              },
+              {
+                "params": [
+                  "/60*10"
+                ],
+                "type": "math"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "usage_point_id",
+              "operator": "=~",
+              "value": "/^$pdl$/"
+            },
+            {
+              "condition": "AND",
+              "key": "interval_length",
+              "operator": "=",
+              "value": "PT10M"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Consommation mensuelle 2021",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Time": 2,
+              "month": 1,
+              "sum": 3,
+              "year": 0
+            },
+            "renameByName": {
+              "month": "Mois",
+              "sum": "Consommation",
+              "year": "Année"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "displayMode": "json-view",
+            "filterable": false
+          },
+          "decimals": 2,
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 2000000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Consommation"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "unit",
+                "value": "watt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Année"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mois"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 8,
+        "x": 9,
+        "y": 24
+      },
+      "id": 23,
+      "links": [],
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Année"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.3",
+      "targets": [
+        {
+          "alias": "$tag_year",
+          "groupBy": [
+            {
+              "params": [
+                "month"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "year"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "consumption_load_curve",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/) AND \"year\" = '2020' GROUP BY \"month\", \"year\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              },
+              {
+                "params": [
+                  "/60*10"
+                ],
+                "type": "math"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "usage_point_id",
+              "operator": "=~",
+              "value": "/^$pdl$/"
+            },
+            {
+              "condition": "AND",
+              "key": "interval_length",
+              "operator": "=",
+              "value": "PT10M"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Consommation mensuelle 2020",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "Time": 2,
+              "month": 1,
+              "sum": 3,
+              "year": 0
+            },
+            "renameByName": {
+              "month": "Mois",
+              "sum": "Consommation",
+              "year": "Année"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "HASS",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "displayMode": "json-view",
+            "filterable": false
+          },
+          "decimals": 2,
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 2000000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Consommation"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "lcd-gauge"
+              },
+              {
+                "id": "unit",
+                "value": "watt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Année"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 76
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mois"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 49
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 7,
+        "x": 17,
+        "y": 24
+      },
+      "id": 29,
+      "links": [],
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Année"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.3",
+      "targets": [
+        {
+          "alias": "$tag_year",
+          "groupBy": [
+            {
+              "params": [
+                "month"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "year"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "consumption_load_curve",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(\"value\")  FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ ) AND \"year\" = '2019' GROUP BY \"month\", \"year\"",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -3207,7 +2982,6 @@
           ]
         },
         {
-          "alias": "Consommation {année: $tag_year , mois: $tag_month}",
           "groupBy": [
             {
               "params": [
@@ -3224,46 +2998,9 @@
           ],
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\") /60*30 FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT30M') GROUP BY \"month\", \"year\"",
-          "rawQuery": true,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"consumption_load_curve\" WHERE (\"usage_point_id\" =~ /^$pdl$/ AND \"interval_length\" = 'PT60M') GROUP BY \"month\", \"year\"",
-          "rawQuery": true,
-          "refId": "C",
+          "query": "SELECT mean(\"value\") FROM \"measurement\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": false,
+          "refId": "D",
           "resultFormat": "time_series",
           "select": [
             [
@@ -3284,7 +3021,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Consommation mensuelle",
+      "title": "Consommation mensuelle 2019",
       "transformations": [
         {
           "id": "organize",
@@ -3328,7 +3065,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 38
       },
       "hiddenSeries": false,
       "id": 17,
@@ -3346,9 +3083,12 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "paceLength": 10,
       "percentage": false,
-      "pluginVersion": "7.1.5",
+      "pluginVersion": "7.3.3",
       "pointradius": 3,
       "points": true,
       "renderer": "flot",
@@ -3393,12 +3133,6 @@
               {
                 "params": [],
                 "type": "sum"
-              },
-              {
-                "params": [
-                  " / 2"
-                ],
-                "type": "math"
               }
             ]
           ],
@@ -3461,107 +3195,6 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "datasource": "HASS",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "watt"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "time: YYYY-MM-DD"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 13,
-        "x": 11,
-        "y": 22
-      },
-      "id": 30,
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Time"
-          }
-        ]
-      },
-      "pluginVersion": "7.1.5",
-      "targets": [
-        {
-          "alias": "Power Consumption",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") / 2 FROM \"consumption_load_curve\" WHERE $timeFilter GROUP BY time(1d,-1h) fill(null)",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Power Consumption Values per day",
-      "type": "table"
     }
   ],
   "refresh": false,
@@ -3576,20 +3209,22 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "00000000000000",
-          "value": "00000000000000"
+          "text": "XXXXXXXXXXXXXXX",
+          "value": "XXXXXXXXXXXXXXX"
         },
+        "error": null,
         "hide": 0,
         "label": "Point de livraison",
         "name": "pdl",
         "options": [
           {
-            "selected": true,
-            "text": "00000000000000",
-            "value": "00000000000000"
+            "selected": false,
+            "text": "XXXXXXXXXXXXXXX",
+            "value": "XXXXXXXXXXXXXXX"
           }
         ],
-        "query": "00000000000000",
+        "query": "XXXXXXXXXXXXXXX",
+        "queryValue": "XXXXXXXXXXXXXXX",
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
@@ -3600,6 +3235,7 @@
           "text": "0.1587",
           "value": "0.1587"
         },
+        "error": null,
         "hide": 0,
         "label": "€ / kWh Base",
         "name": "price_STD",
@@ -3621,6 +3257,7 @@
           "text": "0.1337",
           "value": "0.1337"
         },
+        "error": null,
         "hide": 0,
         "label": "€ / kWh (HC)",
         "name": "price_HC",
@@ -3641,6 +3278,7 @@
           "text": "0.1781",
           "value": "0.1781"
         },
+        "error": null,
         "hide": 0,
         "label": "€ / kWh (HP)",
         "name": "price_HP",
@@ -3661,6 +3299,7 @@
           "text": "240",
           "value": "240"
         },
+        "error": null,
         "hide": 0,
         "label": "Surface de la maison",
         "name": "surface_maison",
@@ -3679,7 +3318,7 @@
     ]
   },
   "time": {
-    "from": "now-30d",
+    "from": "now-90d",
     "to": "now"
   },
   "timepicker": {
@@ -3708,7 +3347,7 @@
     ]
   },
   "timezone": "",
-  "title": "Linky",
-  "uid": "P9D3-2QZz",
-  "version": 89
+  "title": "Enedis",
+  "uid": "6IBzsF-Gk",
+  "version": 3
 }
