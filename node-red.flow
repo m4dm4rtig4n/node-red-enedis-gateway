@@ -1939,7 +1939,7 @@
         "id": "5a120b36.df9674",
         "type": "mqtt-broker",
         "name": "MQTT",
-        "broker": "IP.VERS.TON.MQTT,
+        "broker": "IP.VERS.TON.MQTT",
         "port": "1883",
         "clientid": "node-red-dynamic",
         "usetls": false,
