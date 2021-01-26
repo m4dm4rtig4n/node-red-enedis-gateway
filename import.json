@@ -1,1 +1,432 @@
-[{"id":"3f067bb0.be5694","type":"subflow","name":"GitHub to Flow","info":"","category":"","in":[{"x":100,"y":140,"wires":[{"id":"59900f73.e0b81"}]}],"out":[],"env":[{"name":"Url Git","type":"str","value":""}],"color":"#DDAA99"},{"id":"348c014c.f37e1e","type":"function","z":"3f067bb0.be5694","name":"Param http","func":"msg.method = 'POST' ; // add flow if flow_id not exist\nmsg.url = 'http://'+msg.user_nr+':'+msg.password_nr+'@localhost:1880/flow' ;\n\nif(msg.type==='flow' ){\n    if(msg.flow_id != undefined ){\n        msg.method = 'PUT' ;  // update flow  \n        msg.url += '/'+ msg.flow_id ;\n    }\n}else{// update subflow  \n    msg.method = 'PUT' ;  // update flow  \n    msg.url += '/global' ;\n}\n\nmsg.payload = msg.content;\n\nreturn msg;","outputs":1,"noerr":0,"initialize":"","finalize":"","x":650,"y":280,"wires":[["551a1f75.346cd"]]},{"id":"59900f73.e0b81","type":"change","z":"3f067bb0.be5694","name":"Param into msg","rules":[{"t":"set","p":"flow_git","pt":"msg","to":"Url Git","tot":"env"}],"action":"","property":"","from":"","to":"","reg":false,"x":260,"y":140,"wires":[["9d44e71c.3e4198"]]},{"id":"ec64fef6.600af","type":"http request","z":"3f067bb0.be5694","name":"get list Flows","method":"GET","ret":"obj","paytoqs":"ignore","url":"","tls":"","persist":false,"proxy":"","authType":"","x":190,"y":280,"wires":[["f5eb4de7.ebba6"]]},{"id":"f5eb4de7.ebba6","type":"function","z":"3f067bb0.be5694","name":"search ID of Flows","func":"msg.flow_id2 = msg.flow_id ;\nmsg.flow_id = undefined ;\n\nif(msg.type==='flow'){\n\n    msg.payload.forEach( (f) => {\n        if(f.label===msg.flow_name){\n            msg.flow_id = f.id;\n        }\n    });\n\n}else{\n    for(let i=0 ; i<msg.payload.subflows.length; i++){\n        const f = msg.payload.subflows[i] ;\n        // name => SubFlow\n        if(f.name===msg.flow_name ){\n            msg.flow_id = 'global';\n            msg.payload.subflows[i] = msg.content ;\n        }\n    }\n    if(msg.flow_id===undefined){\n        msg.payload.subflows.push(msg.content) ;\n    }\n    // il faut renvoyer le global entier modifié\n    msg.content=msg.payload;\n\n}\n\nreturn msg;","outputs":1,"noerr":0,"initialize":"","finalize":"","x":410,"y":280,"wires":[["348c014c.f37e1e"]]},{"id":"551a1f75.346cd","type":"http request","z":"3f067bb0.be5694","name":"Create Or update Flow","method":"use","ret":"obj","paytoqs":"ignore","url":"","tls":"","persist":false,"proxy":"","authType":"","x":880,"y":280,"wires":[["c6626e56.a1fe"]]},{"id":"c6626e56.a1fe","type":"debug","z":"3f067bb0.be5694","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","targetType":"msg","statusVal":"","statusType":"auto","x":1110,"y":280,"wires":[]},{"id":"1dd78489.33628b","type":"http request","z":"3f067bb0.be5694","name":"get Flow of git","method":"GET","ret":"obj","paytoqs":"ignore","url":"","tls":"","persist":false,"proxy":"","authType":"","x":620,"y":140,"wires":[["f18ec939.381c68"]]},{"id":"9d44e71c.3e4198","type":"change","z":"3f067bb0.be5694","name":"Url Git","rules":[{"t":"set","p":"url","pt":"msg","to":"flow_git","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":430,"y":140,"wires":[["1dd78489.33628b"]]},{"id":"f18ec939.381c68","type":"function","z":"3f067bb0.be5694","name":"params","func":"msg.content = msg.payload;\nmsg.flow_name = msg.content.label ; \n\nmsg.url = 'http://'+msg.user_nr+':'+msg.password_nr+'@localhost:1880/flows' ;\nmsg.type= 'flow';\nif( msg.content.type === 'subflow' ){\n    msg.type='subflow';\n    msg.flow_name = msg.content.name ; \n    msg.url = 'http://'+msg.user_nr+':'+msg.password_nr+'@localhost:1880/flow/global' ;\n}\n\n\nreturn msg;","outputs":1,"noerr":0,"initialize":"","finalize":"","x":820,"y":140,"wires":[["ec64fef6.600af"]]},{"id":"b591e346.b4ae7","type":"inject","z":"c07c0ac5.ca6f98","name":"Import","props":[],"repeat":"","crontab":"","once":false,"onceDelay":0.1,"topic":"","x":130,"y":120,"wires":[["135dc559.69ad1b"]]},{"id":"135dc559.69ad1b","type":"credentials","z":"c07c0ac5.ca6f98","name":"Credentials","props":[{"value":"user_nr","type":"msg"},{"value":"password_nr","type":"msg"}],"x":330,"y":120,"wires":[["7db677b7.764f18"]]},{"id":"7db677b7.764f18","type":"subflow:3f067bb0.be5694","z":"c07c0ac5.ca6f98","name":"Import Github Flow to onprem","env":[{"name":"Url Git","value":"https://raw.githubusercontent.com/m4dm4rtig4n/node-red-enedis-gateway/main/enedis.flow","type":"str"},{"name":"Flow Name","value":"Test","type":"str"}],"x":580,"y":120,"wires":[]}]
+[
+    {
+        "id": "3f067bb0.be5694",
+        "type": "subflow",
+        "name": "GitHub to Flow",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "f096e2c8.6dcd8"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "Url Git",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "color": "#DDAA99"
+    },
+    {
+        "id": "f096e2c8.6dcd8",
+        "type": "change",
+        "z": "3f067bb0.be5694",
+        "name": "Param into msg",
+        "rules": [
+            {
+                "t": "set",
+                "p": "flow_git",
+                "pt": "msg",
+                "to": "Url Git",
+                "tot": "env"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 210,
+        "y": 120,
+        "wires": [
+            [
+                "3b0af01f.b841f"
+            ]
+        ]
+    },
+    {
+        "id": "c4e5aead.108f7",
+        "type": "http request",
+        "z": "3f067bb0.be5694",
+        "name": "get Flow of git",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 570,
+        "y": 120,
+        "wires": [
+            [
+                "5d0856dc.666f88"
+            ]
+        ]
+    },
+    {
+        "id": "3b0af01f.b841f",
+        "type": "change",
+        "z": "3f067bb0.be5694",
+        "name": "Url Git",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "flow_git",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 120,
+        "wires": [
+            [
+                "c4e5aead.108f7"
+            ]
+        ]
+    },
+    {
+        "id": "46447174.105c",
+        "type": "function",
+        "z": "3f067bb0.be5694",
+        "name": "Format Token URL",
+        "func": "msg.content = msg.payload;\nmsg.url = \"http://localhost:1880/auth/token\";\nmsg.payload = {\n    'client_id': 'node-red-admin',\n    'grant_type': 'password',\n    'scope': '*',\n    'username': msg.user_nr,\n    'password': msg.password_nr,\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 910,
+        "y": 160,
+        "wires": [
+            [
+                "cfc9b165.3e53c"
+            ]
+        ]
+    },
+    {
+        "id": "cfc9b165.3e53c",
+        "type": "http request",
+        "z": "3f067bb0.be5694",
+        "name": "Get token",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "http://localhost:1880/auth/token",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1100,
+        "y": 160,
+        "wires": [
+            [
+                "86be6512.cb4fc8"
+            ]
+        ]
+    },
+    {
+        "id": "86be6512.cb4fc8",
+        "type": "json",
+        "z": "3f067bb0.be5694",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1250,
+        "y": 160,
+        "wires": [
+            [
+                "ca09c96f.e564d8"
+            ]
+        ]
+    },
+    {
+        "id": "24be036c.9513bc",
+        "type": "function",
+        "z": "3f067bb0.be5694",
+        "name": "params",
+        "func": "msg.flow_name = msg.content.label ; \n\nvar access_token = msg.payload.access_token\n\nmsg.access_token = access_token;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nmsg.url = 'http://localhost:1880/flows'\nmsg.type= 'flow';\nif( msg.content.type === 'subflow' ){\n    msg.type='subflow';\n    msg.flow_name = msg.content.name ; \n    msg.url = 'http://localhost:1880/flow/global' ;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 180,
+        "y": 220,
+        "wires": [
+            [
+                "a7c9013e.1898b"
+            ]
+        ]
+    },
+    {
+        "id": "1d972e1d.cc7272",
+        "type": "function",
+        "z": "3f067bb0.be5694",
+        "name": "Param http",
+        "func": "var access_token = msg.access_token\n\nmsg.method = 'POST' ; // add flow if flow_id not exist\nmsg.url = 'http://localhost:1880/flow' ;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nif(msg.type==='flow' ){\n    if(msg.flow_id != undefined ){\n        msg.method = 'PUT' ;  // update flow  \n        msg.url += '/'+ msg.flow_id ;\n    }\n}else{// update subflow  \n    msg.method = 'PUT' ;  // update flow  \n    msg.url += '/global' ;\n}\n\nmsg.payload = msg.content;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 810,
+        "y": 220,
+        "wires": [
+            [
+                "7860653e.b2904c"
+            ]
+        ]
+    },
+    {
+        "id": "a7c9013e.1898b",
+        "type": "http request",
+        "z": "3f067bb0.be5694",
+        "name": "get list Flows",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 350,
+        "y": 220,
+        "wires": [
+            [
+                "40bc6ff6.837f3"
+            ]
+        ]
+    },
+    {
+        "id": "40bc6ff6.837f3",
+        "type": "function",
+        "z": "3f067bb0.be5694",
+        "name": "search ID of Flows",
+        "func": "msg.flow_id2 = msg.flow_id ;\nmsg.flow_id = undefined ;\n\nnode.log('type : '+msg.type);\n\nif(msg.type==='flow'){\n    msg.payload.forEach( (f) => {\n        if(f.label===msg.flow_name){\n            msg.flow_id = f.id;\n        }\n    });\n\n}else{\n    for(let i=0 ; i<msg.payload.subflows.length; i++){\n        const f = msg.payload.subflows[i] ;\n        // name => SubFlow\n        if(f.name===msg.flow_name ){\n            msg.flow_id = 'global';\n            msg.payload.subflows[i] = msg.content ;\n        }\n    }\n    if(msg.flow_id===undefined){\n        msg.payload.subflows.push(msg.content) ;\n    }\n    // il faut renvoyer le global entier modifié\n    msg.content=msg.payload;\n\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "1d972e1d.cc7272"
+            ]
+        ]
+    },
+    {
+        "id": "7860653e.b2904c",
+        "type": "http request",
+        "z": "3f067bb0.be5694",
+        "name": "Create Or update Flow",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1040,
+        "y": 220,
+        "wires": [
+            [
+                "8e24916e.62eb1"
+            ]
+        ]
+    },
+    {
+        "id": "8e24916e.62eb1",
+        "type": "debug",
+        "z": "3f067bb0.be5694",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5d0856dc.666f88",
+        "type": "switch",
+        "z": "3f067bb0.be5694",
+        "name": "Auth ?",
+        "property": "user_nr",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "empty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 730,
+        "y": 120,
+        "wires": [
+            [
+                "2158d050.550da"
+            ],
+            [
+                "46447174.105c"
+            ]
+        ]
+    },
+    {
+        "id": "d4cf0165.6f89",
+        "type": "link out",
+        "z": "3f067bb0.be5694",
+        "name": "",
+        "links": [
+            "ef0433e3.96e54"
+        ],
+        "x": 1015,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "ca09c96f.e564d8",
+        "type": "link out",
+        "z": "3f067bb0.be5694",
+        "name": "",
+        "links": [
+            "ef0433e3.96e54"
+        ],
+        "x": 1335,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "ef0433e3.96e54",
+        "type": "link in",
+        "z": "3f067bb0.be5694",
+        "name": "",
+        "links": [
+            "d4cf0165.6f89",
+            "ca09c96f.e564d8"
+        ],
+        "x": 85,
+        "y": 220,
+        "wires": [
+            [
+                "24be036c.9513bc"
+            ]
+        ]
+    },
+    {
+        "id": "2158d050.550da",
+        "type": "change",
+        "z": "3f067bb0.be5694",
+        "name": "Save content",
+        "rules": [
+            {
+                "t": "set",
+                "p": "content",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 900,
+        "y": 80,
+        "wires": [
+            [
+                "d4cf0165.6f89"
+            ]
+        ]
+    },
+    {
+        "id": "b591e346.b4ae7",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Import",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "135dc559.69ad1b"
+            ]
+        ]
+    },
+    {
+        "id": "7db677b7.764f18",
+        "type": "subflow:3f067bb0.be5694",
+        "z": "f6f2187d.f17ca8",
+        "name": "Import Github Flow to onprem",
+        "env": [
+            {
+                "name": "Url Git",
+                "value": "https://raw.githubusercontent.com/m4dm4rtig4n/node-red-enedis-gateway/main/enedis.flow",
+                "type": "str"
+            },
+            {
+                "name": "Flow Name",
+                "value": "Test",
+                "type": "str"
+            }
+        ],
+        "x": 580,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "135dc559.69ad1b",
+        "type": "credentials",
+        "z": "f6f2187d.f17ca8",
+        "name": "Credentials",
+        "props": [
+            {
+                "value": "user_nr",
+                "type": "msg"
+            },
+            {
+                "value": "password_nr",
+                "type": "msg"
+            }
+        ],
+        "x": 330,
+        "y": 120,
+        "wires": [
+            [
+                "7db677b7.764f18"
+            ]
+        ]
+    }
+]
