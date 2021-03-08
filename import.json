@@ -22,6 +22,11 @@
                 "name": "Url Git",
                 "type": "str",
                 "value": ""
+            },
+            {
+                "name": "server_url",
+                "type": "str",
+                "value": "localhost:1880"
             }
         ],
         "color": "#DDAA99"
@@ -37,6 +42,13 @@
                 "p": "flow_git",
                 "pt": "msg",
                 "to": "Url Git",
+                "tot": "env"
+            },
+            {
+                "t": "set",
+                "p": "server_url",
+                "pt": "msg",
+                "to": "server_url",
                 "tot": "env"
             }
         ],
@@ -106,7 +118,7 @@
         "type": "function",
         "z": "3f067bb0.be5694",
         "name": "Format Token URL",
-        "func": "msg.content = msg.payload;\nmsg.url = \"http://localhost:1880/auth/token\";\nmsg.payload = {\n    'client_id': 'node-red-admin',\n    'grant_type': 'password',\n    'scope': '*',\n    'username': msg.user_nr,\n    'password': msg.password_nr,\n}\n\nreturn msg;",
+        "func": "msg.content = msg.payload;\nmsg.url = \"http://\"+msg.server_url+\"/auth/token\";\nmsg.payload = {\n    'client_id': 'node-red-admin',\n    'grant_type': 'password',\n    'scope': '*',\n    'username': msg.user_nr,\n    'password': msg.password_nr,\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -161,7 +173,7 @@
         "type": "function",
         "z": "3f067bb0.be5694",
         "name": "params",
-        "func": "msg.flow_name = msg.content.label ; \n\nvar access_token = msg.payload.access_token\n\nmsg.access_token = access_token;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nmsg.url = 'http://localhost:1880/flows'\nmsg.type= 'flow';\nif( msg.content.type === 'subflow' ){\n    msg.type='subflow';\n    msg.flow_name = msg.content.name ; \n    msg.url = 'http://localhost:1880/flow/global' ;\n}\n\n\nreturn msg;",
+        "func": "msg.flow_name = msg.content.label ; \n\nvar access_token = msg.payload.access_token\n\nmsg.access_token = access_token;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nmsg.url = 'http://'+msg.server_url+'/flows'\nmsg.type= 'flow';\nif( msg.content.type === 'subflow' ){\n    msg.type='subflow';\n    msg.flow_name = msg.content.name ; \n    msg.url = 'http://localhost:1880/flow/global' ;\n}\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -179,7 +191,7 @@
         "type": "function",
         "z": "3f067bb0.be5694",
         "name": "Param http",
-        "func": "var access_token = msg.access_token\n\nmsg.method = 'POST' ; // add flow if flow_id not exist\nmsg.url = 'http://localhost:1880/flow' ;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nif(msg.type==='flow' ){\n    if(msg.flow_id != undefined ){\n        msg.method = 'PUT' ;  // update flow  \n        msg.url += '/'+ msg.flow_id ;\n    }\n}else{// update subflow  \n    msg.method = 'PUT' ;  // update flow  \n    msg.url += '/global' ;\n}\n\nmsg.payload = msg.content;\n\nreturn msg;",
+        "func": "var access_token = msg.access_token\n\nmsg.method = 'POST' ; // add flow if flow_id not exist\nmsg.url = 'http://'+msg.server_url+'/flow' ;\nmsg.headers = {};\nmsg.headers['Authorization'] = 'Bearer '+access_token;\n\nif(msg.type==='flow' ){\n    if(msg.flow_id != undefined ){\n        msg.method = 'PUT' ;  // update flow  \n        msg.url += '/'+ msg.flow_id ;\n    }\n}else{// update subflow  \n    msg.method = 'PUT' ;  // update flow  \n    msg.url += '/global' ;\n}\n\nmsg.payload = msg.content;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -261,11 +273,11 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1270,
+        "x": 1240,
         "y": 220,
         "wires": []
     },
@@ -369,7 +381,7 @@
     {
         "id": "b591e346.b4ae7",
         "type": "inject",
-        "z": "f6f2187d.f17ca8",
+        "z": "c07c0ac5.ca6f98",
         "name": "Import",
         "props": [],
         "repeat": "",
@@ -386,30 +398,9 @@
         ]
     },
     {
-        "id": "7db677b7.764f18",
-        "type": "subflow:3f067bb0.be5694",
-        "z": "f6f2187d.f17ca8",
-        "name": "Import Github Flow to onprem",
-        "env": [
-            {
-                "name": "Url Git",
-                "value": "https://raw.githubusercontent.com/m4dm4rtig4n/node-red-enedis-gateway/main/enedis.flow",
-                "type": "str"
-            },
-            {
-                "name": "Flow Name",
-                "value": "Test",
-                "type": "str"
-            }
-        ],
-        "x": 580,
-        "y": 120,
-        "wires": []
-    },
-    {
         "id": "135dc559.69ad1b",
         "type": "credentials",
-        "z": "f6f2187d.f17ca8",
+        "z": "c07c0ac5.ca6f98",
         "name": "Credentials",
         "props": [
             {
@@ -428,5 +419,26 @@
                 "7db677b7.764f18"
             ]
         ]
+    },
+    {
+        "id": "7db677b7.764f18",
+        "type": "subflow:3f067bb0.be5694",
+        "z": "c07c0ac5.ca6f98",
+        "name": "Import Github Flow to onprem",
+        "env": [
+            {
+                "name": "Url Git",
+                "value": "https://raw.githubusercontent.com/m4dm4rtig4n/node-red-enedis-gateway/main/enedis.flow",
+                "type": "str"
+            },
+            {
+                "name": "Flow Name",
+                "value": "Test",
+                "type": "str"
+            }
+        ],
+        "x": 580,
+        "y": 120,
+        "wires": []
     }
 ]
