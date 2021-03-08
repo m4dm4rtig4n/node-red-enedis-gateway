@@ -18,9 +18,9 @@ Installer les palettes :
 **Installation**
 - Crée un flux vide "Enedis" (le nom du flow est important).
 - Importer ce flow : https://raw.githubusercontent.com/m4dm4rtig4n/node-red-enedis-gateway/main/import.json
-- Ouvrir le node "Import Github Flow to onprem", et adapter la configuration si besoin.
-    Sur Home Assistant, les API de Node-RED sont exposé sur le port 46836 au lieu de 1880
-    Renseigné le user_nr & password_nr si vous avez activer l'authenfication Node-RED (laissez vide sinon).
+- Ouvrir le node "Import Github Flow to onprem", et adapter la configuration si besoin. 
+  - Sur Home Assistant, les API de Node-RED sont exposé sur le port 46836 au lieu de 1880 
+  - Renseigné le user_nr & password_nr si vous avez activer l'authenfication Node-RED (laissez vide sinon).
 - Lancer l'inject "Import".
 - Cliquer sur "Review changes"
 - Puis "Merge" ou "Review changes" si vous désirez voir les changements.
