@@ -1,3 +1,5 @@
+DEPRECATED : Le project à était remplacer par [EnedisGateway2MQTT](https://github.com/m4dm4rtig4n/enedisgateway2mqtt)
+
 # node-red-enedis-gateway
 
 Pour l'installation et la mise à jour du flow, j'utilise les APIs de Node-RED afin de faciliter les mises à jours.
