@@ -1,4 +1,4 @@
-DEPRECATED : Le project à était remplacer par [EnedisGateway2MQTT](https://github.com/m4dm4rtig4n/enedisgateway2mqtt)
+**DEPRECATED** : Le project à était remplacer par [EnedisGateway2MQTT](https://github.com/m4dm4rtig4n/enedisgateway2mqtt)
 
 # node-red-enedis-gateway
 
